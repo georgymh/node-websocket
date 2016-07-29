@@ -3,7 +3,7 @@
 var http = require('http');
 var server = http.createServer(function(request, response) {});
 
-var portNumber = 8080;
+var portNumber = 80;
 server.listen(portNumber, function() {
     console.log((new Date()) + ' Server is listening on port ' + portNumber);
 });
