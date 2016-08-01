@@ -3,7 +3,7 @@
 var http = require('http');
 var server = http.createServer(function(request, response) {});
 
-var portNumber = process.env.PORT || 5000;
+var portNumber = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 server.listen(portNumber, function() {
     console.log((new Date()) + ' Server is listening on port ' + portNumber);
 });
