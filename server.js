@@ -1,7 +1,24 @@
 #!/usr/bin/env node
 
 var http = require('http');
-var server = http.createServer(function(request, response) {});
+var server = http.createServer(function(req, res) {
+    // Usage of endpoint: http://myhost.com/?message=my_message
+    // Where my_message is the string to forward to all subscribed clients (through WS)
+    var queryObject = url.parse(req.url, true).query;
+    console.log((new Date()) + ' New request received with query:', queryObject);
+
+    if (queryObject && queryObject.message) {
+        // Relay the message through websockets
+        var message = queryObject.message;
+        sendMessageToAllClients(message, clients);
+
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Received message: ' + message);
+    } else {
+        res.writeHead(400, {'Content-Type': 'text/plain'});
+        res.end('No message received.');
+    }
+});
 
 var portNumber = process.env.PORT || 5000;
 server.listen(portNumber, function() {
