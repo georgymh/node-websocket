@@ -3,7 +3,7 @@
 var http = require('http');
 var url = require('url');
 var server = http.createServer(function(req, res) {
-    // Usage of endpoint: http://myhost.com/?message=my_message
+    // Usage of endpoint: http://localhost:1234/?message=my_message
     // Where my_message is the string to forward to all subscribed clients (through WS)
     var queryObject = url.parse(req.url, true).query;
     console.log((new Date()) + ' New request received with query:', queryObject);
@@ -44,24 +44,27 @@ wsServer.on('request', function(r){
 
     // Create event listener
     connection.on('message', function(message) {
-
         // The string message that was sent to us
         var msgString = message.utf8Data;
-        console.log("Received message", msgString);
-
-        // Loop through all clients
-        for(var i in clients){
-            // Send a message to the client with the message
-            clients[i].sendUTF(msgString);
-        }
+        sendMessageToAllClients(msgString, clients);
     });
 
     connection.on('close', function(reasonCode, description) {
         delete clients[id];
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
     });
-
 });
 
 var count = 0;
 var clients = {};
+
+function sendMessageToAllClients(message, clients) {
+    console.log("Forwarding message", message);
+
+    // Loop through all clients
+    for (var i in clients) {
+        // Send a message to the client with the message
+        clients[i].sendUTF(message);
+    }
+}
+
