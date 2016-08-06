@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var http = require('http');
+var url = require('url');
 var server = http.createServer(function(req, res) {
     // Usage of endpoint: http://myhost.com/?message=my_message
     // Where my_message is the string to forward to all subscribed clients (through WS)
